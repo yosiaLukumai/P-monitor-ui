@@ -1,0 +1,1 @@
+export const MainUrl = "http://localhost:3400"
