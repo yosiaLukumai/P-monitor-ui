@@ -20,10 +20,11 @@ const CardComponent = ({ onChildEvent }) => {
         if (password.trim() != "" || email.trim() != "") {
             // a request can be sent to login
             console.log("Main Url", `${MainUrl}/user/login`);
-            const result = await fetch(`${MainUrl}/user/login`, {
+            const result = await fetch(`${MainUrl}user/login`, {
                 method: "POST",
                 headers: {
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
+                    'Accept': 'application/json'
                 },
                 body: JSON.stringify({
                     email,
@@ -75,10 +76,11 @@ const CardComponent = ({ onChildEvent }) => {
     const handleRegister = async () => {
         setLoadingR(true);
         if (email.trim() != "" && deviceId.trim() != "" && password.trim() != "") {
-            const result = await fetch(`${MainUrl}/user/register`, {
+            const result = await fetch(`${MainUrl}user/register`, {
                 method: "POST",
                 headers: {
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
+                    'Accept': 'application/json'
                 },
                 body: JSON.stringify({
                     email,

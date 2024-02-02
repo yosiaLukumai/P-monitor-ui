@@ -33,7 +33,7 @@ export const Debt = () => {
     const buyUnits = async () => {
         try {
             setError("")
-            let url = `${MainUrl}/user/balance/${retriveData("userEm")._id}/3`
+            let url = `${MainUrl}user/balance/${retriveData("userEm")._id}/3`
             const data = await fetch(url)
          
             const resp = await data.json()

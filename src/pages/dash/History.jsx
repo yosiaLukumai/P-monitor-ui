@@ -19,7 +19,7 @@ export const History = () => {
 
                 // Fetch data from an API (replace with your API endpoint)
                 // /specific/:parameter/:id
-                const response = await fetch(`${MainUrl}/data/specific/${parameter}/${retriveData("PData")._id}`);
+                const response = await fetch(`${MainUrl}data/specific/${parameter}/${retriveData("PData")._id}`);
                 const result = await response.json();
 
                 // // Set the fetched data to the state

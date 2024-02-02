@@ -25,7 +25,7 @@ export const Dash = () => {
                 setLoading(true);
 
                 // Fetch data from an API (replace with your API endpoint)
-                const response = await fetch(`${MainUrl}/data/retrieve/${retriveData("PData")._id}`);
+                const response = await fetch(`${MainUrl}data/retrieve/${retriveData("PData")._id}`);
                 const result = await response.json();
 
                 // Set the fetched data to the state
