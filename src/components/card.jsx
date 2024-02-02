@@ -19,7 +19,7 @@ const CardComponent = ({ onChildEvent }) => {
         // check if all credential are provided 
         if (password.trim() != "" || email.trim() != "") {
             // a request can be sent to login
-
+            console.log("Main Url", `${MainUrl}/user/login`);
             const result = await fetch(`${MainUrl}/user/login`, {
                 method: "POST",
                 headers: {
@@ -32,7 +32,6 @@ const CardComponent = ({ onChildEvent }) => {
                 mode: "cors"
             })
             const response = await result.json();
-            console.log("Reponse:   ", response);
             if (response.success != false && response.body != null) {
                 // a user is registered check the payload save the user to the 
                 save("PData", response.body.user)
