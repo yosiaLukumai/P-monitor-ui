@@ -38,7 +38,7 @@ const router  = createBrowserRouter([
     ]
     
   }
-], {basename:"/pmonitor"})
+])
 
 
 const colors = {
