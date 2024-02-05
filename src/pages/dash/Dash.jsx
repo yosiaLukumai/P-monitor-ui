@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom"
 import { useMediaQuery } from "./../../Hooks/mediaQuery"
 import spinach from "./../../assets/spinach.jpg"
 import { retriveData } from "../../utils/localStorage"
+import { Chart } from "react-google-charts"
 import { MainUrl } from "../../../variables"
 import "../../../src/App.scss"
 import { WiHumidity } from "react-icons/wi";
@@ -10,9 +11,13 @@ import { IoMdResize } from "react-icons/io";
 import { Box, SimpleGrid, Flex, Heading, Spacer, Button, Icon, Text, Image, Card, CardBody, CardFooter, Stack, Toast, useToast } from "@chakra-ui/react"
 import { useEffect, useState } from "react"
 import { io } from "socket.io-client"
+
+
+
 export const Dash = () => {
     let screenSize = useMediaQuery()
     let [data, setData] = useState(null)
+    let [graphData, setGraphData] = useState(null)
     let [loading, setLoading] = useState(true)
     let [error, setError] = useState("")
     const navigator = useNavigate()
@@ -42,7 +47,44 @@ export const Dash = () => {
 
         // Call the fetchData function when the component mounts
         fetchData();
+
+
+        const fetchGraphData = async () => {
+            try {
+
+                // Set loading to true while fetching data
+                setLoading(true);
+                // Fetch data from an API (replace with your API endpoint)
+                const response = await fetch(`${MainUrl}data/graphdata/${retriveData("PData")?.deviceId}`);
+                const result = await response.json();
+                // console.log(result);
+                if (result.success) {
+                    let dataArray = [["Time", "Temp", "Hum", "Size"]]
+                    result?.body?.map(element => {
+                        dataArray.push([element?.createdAt.slice(11, 16), element?.temp, element?.hum, element?.size])
+                    })
+                    setGraphData(dataArray)
+                }
+                // Set the fetched data to the state
+                setLoading(false);
+            } catch (error) {
+                // Set error state in case of an error
+                setError(error);
+            } finally {
+                // Set loading to false once the data is fetched (whether successful or not)
+                setLoading(false);
+            }
+        };
+
+        fetchGraphData();
     }, [])
+
+    const options = {
+        curveType: "function",
+        legend: { position: "bottom" },
+    };
+
+
 
     useEffect(() => {
         let socket = io(MainUrl)
@@ -53,16 +95,27 @@ export const Dash = () => {
             // pass to filter if the data are of this user
             if (retriveData("PData")._id == data.userId) {
                 setData(data)
+                console.log("runned initially...");
+                setGraphData((prevData) => {
+                    if (prevData) {
+                        setGraphData([prevData[0], ...prevData?.slice(2), [data?.createdAt?.slice(11, 16), data?.temp, data?.hum, data?.size]])
+
+                    }
+                })
+                // fired socket should update the graph too
+                // let graphDataCopy = graphData;
+                // console.log("copy:   ", graphDataCopy);
+                // let dataGraphMod = [graphDataCopy[0], ...graphDataCopy.slice(2), [data?.createdAt.slice(11, 16), data?.temp, data?.hum, data?.size]];
+                // console.log(dataGraphMod);
+                // setGraphData(dataGraphMod)
             }
         })
     }, [])
+
     const navigateTo = (path) => {
         navigator(`/auth/${retriveData("PData")._id}/history/${path}`)
     }
-    const logout = () => {
-        navigator("/", { replace: true })
 
-    }
     return (
         <>
             <Box px="0.7rem" mx="auto">
@@ -104,12 +157,23 @@ export const Dash = () => {
                                         <Text color="#fb8500" fontSize="1.3rem" fontWeight="bold">{data?.size}</Text>
                                     </Box>
                                 </Box>
-
-
                             </SimpleGrid>
                         </Box>
 
                     </Box>
+                    {!loading &&
+                        <Box shadow="dark-lg" my="1.7rem" mx="auto" width={{ base: '100%', sm: '80%', md: '70%' }}>
+                            <Text fontSize="1.3rem" pl='1.3rem' pt="1rem" fontWeight="bold" color="#023047"> Data visualization (Hum-Temp-Size)
+                            </Text>
+                            <Chart
+                                chartType="LineChart"
+                                width="100%"
+                                height="420px"
+                                data={graphData}
+                                options={options}
+                            />
+                        </Box>
+                    }
 
                     <Box mx="auto" py="2rem" width={{ base: '100%', sm: '80%', md: '70%' }} px={screenSize.width < 600 ? '2' : '0'}>
                         <Text color="#023047" py="1.1rem" textDecoration="underline" fontWeight="bold" fontSize="1.5rem" >Captured Pictures.</Text>
@@ -148,13 +212,12 @@ export const Dash = () => {
 
                     </Box>
 
-                </Box> 
+                </Box>
+
+
 
 
             </Box>
-
-            {/* {screenSize.width > 630 ? <div className="bgDash"><h1>Ops...</h1><h1>App is designed for Mobile phone</h1></div> : <div className="dashStyles"><div className="header "><div className="AppName"><span style={{ fontSize: "2rem", fontWeight: "bold", fontStyle:"italic",}}>
-                <NavLink  to={`/auth/${retriveData("userEm")._id}`} style={{textDecoration:"none", color: "rgb(58, 58, 58)"}}>E_meters</NavLink> </span></div><div><img className="responsiveIcon" src={settingIcon} alt="simpleicon"></img></div></div><Outlet /></div>} */}
         </>
     )
 }
