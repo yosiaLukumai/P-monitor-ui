@@ -19,7 +19,7 @@ const TableParameters = ({ data, parameter }) => {
                             <Tr py="1rem" key={index}>
                                 <Td fontWeight="bold">{(item?.createdAt)?.slice(0, 10)}</Td>
                                 <Td fontWeight="bold">{(item?.createdAt)?.slice(11, 16)}</Td>
-                                <Td color="#fb8500" fontWeight="bold">{item?.hum || item?.temp || item?.size}</Td>
+                                <Td color="#fb8500" fontWeight="bold">{(item?.hum)?.toFixed(2) || (item?.temp)?.toFixed(2) || item?.size}</Td>
                             </Tr>
                         ))}
                     </Tbody>

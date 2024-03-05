@@ -161,7 +161,7 @@ export const Dash = () => {
                                     </Box>
                                     <Box pl="0.7rem">
                                         <Text color="pink.900" fontSize={((screenSize.width > 539 && screenSize.width < 700) || (screenSize.width > 750 && screenSize.width < 1110)) ? '1.2rem' : '1.5rem'} fontWeight="bold">Temperature</Text>
-                                        <Text color="#fb8500" fontSize="1.3rem" fontWeight="bold">{data?.temp} C</Text>
+                                        <Text color="#fb8500" fontSize="1.3rem" fontWeight="bold">{Number(data?.temp).toFixed(2)} C</Text>
                                     </Box>
                                 </Box>
 
@@ -171,7 +171,7 @@ export const Dash = () => {
                                     </Box>
                                     <Box pl="0.7rem">
                                         <Text color="pink.900" fontSize={((screenSize.width > 539 && screenSize.width < 700) || (screenSize.width > 750 && screenSize.width < 1110)) ? '1.2rem' : '1.5rem'} fontWeight="bold">Humidity</Text>
-                                        <Text color="#fb8500" fontSize="1.3rem" fontWeight="bold">{data?.hum} %</Text>
+                                        <Text color="#fb8500" fontSize="1.3rem" fontWeight="bold">{Number(data?.hum).toFixed(2)} %</Text>
                                     </Box>
                                 </Box>
                                 <Box cursor="pointer" boxShadow='2xl' py='5' display="flex" rounded='xl' bg='#8ecae6' onClick={() => navigateTo("size")}>
@@ -189,7 +189,7 @@ export const Dash = () => {
                     </Box>
                     {!loading &&
                         <Box shadow="dark-lg" my="1.7rem" mx="auto" width={{ base: '100%', sm: '80%', md: '70%' }}>
-                            <Text fontSize="1.3rem" pl='1.3rem' pt="1rem" fontWeight="bold" color="#023047"> Data visualization (Hum-Temp-Size)
+                            <Text fontSize="1.3rem" pl='1.3rem' pt="1rem" fontWeight="bold" color="#023047"> Data visualization
                             </Text>
                             <Chart
                                 chartType="LineChart"
@@ -225,7 +225,9 @@ export const Dash = () => {
                                                         borderRadius='lg'
                                                     />
                                                     <Stack mt='2' spacing='3'>
-                                                        <Heading color="#023047" size='md'>Time: {img?.createdAt?.slice(0, 10)}</Heading>
+                                                        <Heading color="#023047" size='md'>Date: {img?.createdAt?.slice(0, 10)}</Heading>
+                                                        <Heading color="#023047" size='md'> Time: {img?.createdAt?.slice(11, 16)}  Hrs </Heading>
+
                                                     </Stack>
                                                 </CardBody>
 
