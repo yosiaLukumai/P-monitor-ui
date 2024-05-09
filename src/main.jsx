@@ -10,7 +10,9 @@ import { Info } from './pages/dash/Info'
 import { History } from './pages/dash/History'
 import { ChakraProvider, extendTheme } from '@chakra-ui/react'
 import Protected from './Hooks/Protect'
-import { retriveData } from './utils/localStorage'
+import { retriveData, save } from './utils/localStorage'
+import { AllImages } from './pages/dash/Images'
+
 const router  = createBrowserRouter([
   {
     path: "/",
@@ -30,6 +32,10 @@ const router  = createBrowserRouter([
       {
         path: "info",
         element: <Info/>
+      },
+      {
+        path: "image",
+        element: <AllImages/>
       },
       {
         path:"history/:parameter",
