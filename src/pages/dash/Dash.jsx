@@ -1,6 +1,5 @@
 import { useNavigate } from "react-router-dom"
 import { useMediaQuery } from "./../../Hooks/mediaQuery"
-import spinach from "./../../assets/spinach.jpg"
 import { retriveData } from "../../utils/localStorage"
 import { Chart } from "react-google-charts"
 import { MainUrl } from "../../../variables"
@@ -8,7 +7,8 @@ import "../../../src/App.scss"
 import { WiHumidity } from "react-icons/wi";
 import { FaTemperatureHigh } from "react-icons/fa";
 import { IoMdResize } from "react-icons/io";
-import { Box, SimpleGrid, Flex, Heading, Spacer, Button, Icon, Text, Image, Card, CardBody, CardFooter, Stack, Toast, useToast } from "@chakra-ui/react"
+import { Box, SimpleGrid, Icon, Text, useToast, Flex } from "@chakra-ui/react"
+import { Grid, GridItem } from '@chakra-ui/react'
 import { useEffect, useState } from "react"
 import { io } from "socket.io-client"
 
@@ -16,10 +16,10 @@ import { io } from "socket.io-client"
 
 export const Dash = () => {
     let screenSize = useMediaQuery()
-    let [imagesArray, setImagesArray] = useState(null);
+    const [sizeData, setSizeData] = useState(null)
+    const [theresizeData, settheresizeData] = useState(false)
     let [data, setData] = useState(null)
     let [graphData, setGraphData] = useState(null)
-    let [imageReady, setImagesReady] = useState(false);
     let [loading, setLoading] = useState(true)
     let [error, setError] = useState("")
     const navigator = useNavigate()
@@ -62,9 +62,9 @@ export const Dash = () => {
                 // console.log(result);
                 if (result.success) {
                     let results = result?.body?.reverse();
-                    let dataArray = [["Time", "Temp", "Hum", "Size"]]
+                    let dataArray = [["Time", "Temp", "Hum"]]
                     results.map(element => {
-                        dataArray.push([element?.createdAt.slice(11, 16), element?.temp, element?.hum, element?.size])
+                        dataArray.push([element?.createdAt.slice(11, 16), element?.temp, element?.hum])
                     })
                     setGraphData(dataArray)
                 }
@@ -83,9 +83,20 @@ export const Dash = () => {
     }, [])
 
     const options = {
-        // curveType: "function",
+        title: "Temp + Humidity",
+        titleTextStyle: {
+            fontSize: 20
+        },
         legend: { position: "bottom" },
     };
+    const option2 = {
+        title: "Average size",
+        titleTextStyle: {
+            fontSize: 20
+        },
+        legend: { position: "bottom" },
+    };
+
 
 
 
@@ -95,7 +106,6 @@ export const Dash = () => {
             console.log("connected... successfull, id: ", socket.id);
         })
         socket.on("newData", (data) => {
-            // pass to filter if the data are of this user
             if (retriveData("PData")._id == data.userId) {
                 setData(data)
                 console.log("runned initially...");
@@ -115,28 +125,36 @@ export const Dash = () => {
         })
     }, [])
 
-
-    // fetching images
-
     useEffect(() => {
-        async function fetchImages() {
+        const fetchSizes = async () => {
             try {
-                const response = await fetch(`http://45.79.53.206:3400/data/images`);
+
+                // Set loading to true while fetching data
+                settheresizeData(false);
+                // Fetch data from an API (replace with your API endpoint)
+                const response = await fetch(`${MainUrl}data/graphdata/sizes/${retriveData("PData")?.deviceId}`);
                 const result = await response.json();
+                console.log(result);
                 if (result.success) {
-                    setImagesArray(result.body.images)
-                    setImagesReady(true)
-                } else {
-                    setImagesReady(false);
+                    let results = result?.body?.reverse();
+                    let dataArray = [["Time", "Avg Size"]]
+                    results.map(element => {
+                        dataArray.push([element?.createdAt.slice(11, 16), element?.average])
+                    })
+                    setSizeData(dataArray)
+                    settheresizeData(true)
                 }
+                // Set the fetched data to the state
+                setLoading(false);
             } catch (error) {
-
+                setError(error.message);
+            } finally {
+                setLoading(false);
             }
-
-        }
-        fetchImages();
-
+        };
+        fetchSizes();
     }, [])
+
 
     const navigateTo = (path) => {
         navigator(`/auth/${retriveData("PData")._id}/history/${path}`)
@@ -187,83 +205,39 @@ export const Dash = () => {
                         </Box>
 
                     </Box>
-                    {!loading &&
-                        <Box shadow="dark-lg" my="1.7rem" mx="auto" width={{ base: '100%', sm: '80%', md: '70%' }}>
-                            <Text fontSize="1.3rem" pl='1.3rem' pt="1rem" fontWeight="bold" color="#023047"> Data visualization
-                            </Text>
-                            <Chart
-                                chartType="LineChart"
-                                width="100%"
-                                height="420px"
-                                data={graphData}
-                                options={options}
-                            />
+
+                    <Flex mx="auto" flexWrap="wrap" pt="2rem" width={{ base: '100%', sm: '80%', md: '70%' }} justify="space-between">
+                        <Box width={{ base: "100%", md: "48%" }} marginBottom={{ base: "4", md: "0" }}>
+                            {!loading &&
+                                <Box shadow="dark-lg" my="1.7rem" mx="auto" >
+                                    <Chart
+                                        chartType="LineChart"
+                                        width="100%"
+                                        height="420px"
+                                        data={graphData}
+                                        options={options}
+                                    />
+                                </Box>
+                            }
                         </Box>
-                    }
-
-                    {
-                        imageReady &&
-                        <Box mx="auto" py="2rem" width={{ base: '100%', sm: '80%', md: '70%' }} px={screenSize.width < 600 ? '2' : '0'}>
-                            <Text color="#023047" py="1.1rem" textDecoration="underline" fontWeight="bold" fontSize="1.5rem" >Captured Pictures.</Text>
-
-                            <Box>
-                                <SimpleGrid
-                                    backgroundColor=""
-                                    columns={{ sm: 2, md: 3 }}
-                                    spacing='10'
-                                    px={screenSize.width < 600 ? '2' : '0'}
-                                    color='inherit'
-                                >
-                                    {imagesArray?.map((img, index) => (
-                                        <Box key={index}>
-                                            <Card maxW='sm' mt="0rem" shadow="2xl">
-                                                <CardBody>
-                                                    <Image
-                                                        src={`${MainUrl}${img?.imgPath}`}
-                                                        height="60%"
-                                                        alt='Captured. pictures'
-                                                        borderRadius='lg'
-                                                    />
-                                                    <Stack mt='2' spacing='3'>
-                                                        <Heading color="#023047" size='md'>Date: {img?.createdAt?.slice(0, 10)}</Heading>
-                                                        <Heading color="#023047" size='md'> Time: {img?.createdAt?.slice(11, 16)}  Hrs </Heading>
-
-                                                    </Stack>
-                                                </CardBody>
-
-                                            </Card>
-
-                                        </Box>
-                                    ))}
-                                </SimpleGrid>
-
-
-                            </Box>
-
+                        <Box width={{ base: "100%", md: "48%" }}>
+                            {theresizeData &&
+                                <Box shadow="dark-lg" my="1.7rem" mx="auto">
+                                    <Chart
+                                        chartType="LineChart"
+                                        width="100%"
+                                        height="420px"
+                                        data={sizeData}
+                                        options={option2}
+                                    />
+                                </Box>
+                            }
                         </Box>
-                    }
-
-
+                    </Flex>
                 </Box>
-
-
-
-
-
 
             </Box>
         </>
     )
 }
-
-
-
-
-
-
-
-
-
-
-
 
