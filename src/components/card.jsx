@@ -2,7 +2,7 @@ import { Text, Box, Stack, Input, Button } from '@chakra-ui/react'
 import { useState, useEffect } from 'react';
 import { useToast } from '@chakra-ui/react'
 import { MainUrl } from "../../variables"
-import { save } from "./../utils/localStorage"
+import { retriveData, save } from "./../utils/localStorage"
 const CardComponent = ({ onChildEvent }) => {
     const [stateChoose, setStateChosen] = useState("Login")
     const toast = useToast()
@@ -71,6 +71,14 @@ const CardComponent = ({ onChildEvent }) => {
         setLoading(false)
 
     }
+
+    // useEffect(()=> {
+    //     console.log("Force logiin");
+    //     console.log(retriveData("PData"))
+    //     let obj = {"_id":"65bcd8b1cd550d44b73a79f2","email":"rpmugus84","password":"$2a$10$frQCR5kKfO/ZfeP0Z3GIQe1w3AybiZTch0r.hWtozxGGeQ3tORq5a","deviceId":"1000","createdAt":"2024-02-02T11:57:37.477Z","updatedAt":"2024-02-02T11:57:37.477Z","__v":0}
+    //     console.log(obj._id);
+    //     save("PData", obj)
+    // },[])
 
 
     const handleRegister = async () => {

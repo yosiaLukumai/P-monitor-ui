@@ -5,6 +5,7 @@ import { PiPlant } from "react-icons/pi";
 import { retriveData, save } from "../utils/localStorage"
 import { IoLogInOutline } from "react-icons/io5";
 import { FaInfoCircle } from "react-icons/fa";
+import { IoMdAnalytics } from "react-icons/io";
 import { Box, Flex, Heading, Spacer, Icon } from "@chakra-ui/react"
 export const DashBoard = () => {
     let screenSize = useMediaQuery()
@@ -33,6 +34,7 @@ export const DashBoard = () => {
                             </Box>
                             <Spacer />
                             <Icon color="white" cursor="pointer" onClick={() => navigateTo("info")} boxSize="1.5rem" as={FaInfoCircle} />
+                            <Icon color="white" cursor="pointer" ml="0.7rem" onClick={() => navigateTo("image")} boxSize="1.5rem" as={IoMdAnalytics} />
                             <Icon color="white" cursor="pointer" ml="0.7rem" boxSize="1.9rem" as={IoLogInOutline} onClick={() => logout()} />
                         </Flex>
                     </Box>
