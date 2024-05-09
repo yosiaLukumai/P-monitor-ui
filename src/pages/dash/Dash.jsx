@@ -136,7 +136,7 @@ export const Dash = () => {
                 const result = await response.json();
                 console.log(result);
                 if (result.success) {
-                    let results = result?.body?.reverse();
+                    let results = result?.body;
                     let dataArray = [["Time", "Avg Size"]]
                     results.map(element => {
                         dataArray.push([element?.createdAt.slice(11, 16), element?.average])
