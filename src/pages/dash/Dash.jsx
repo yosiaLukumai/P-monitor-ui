@@ -90,7 +90,7 @@ export const Dash = () => {
         legend: { position: "bottom" },
     };
     const option2 = {
-        title: "Average size",
+        title: "Average size (Day vs Size)",
         titleTextStyle: {
             fontSize: 20
         },
@@ -139,7 +139,7 @@ export const Dash = () => {
                     let results = result?.body;
                     let dataArray = [["Time", "Avg Size"]]
                     results.map(element => {
-                        dataArray.push([element?.createdAt.slice(11, 16), element?.average])
+                        dataArray.push([element?._id.slice(6, 10), element?.avg])
                     })
                     setSizeData(dataArray)
                     settheresizeData(true)
