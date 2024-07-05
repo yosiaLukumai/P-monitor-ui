@@ -34,7 +34,7 @@ const TableParametersBox = ({ data }) => {
                                                         <TagLabel fontSize={"1.2rem"} fontWeight={"400"}> Area {val?.area}</TagLabel>
                                                     </Tag>
                                                     <Tag size="sm" colorScheme='green' borderRadius='full' >
-                                                        <TagLabel fontSize={"1.2rem"} fontWeight={"400"}> Height {val?.height}</TagLabel>
+                                                        <TagLabel fontSize={"1.2rem"} fontWeight={"400"}> Height {val?.height} Width:{val?.width} </TagLabel>
                                                     </Tag>
                                                     <Tag size="sm" colorScheme='gray' borderRadius='full' >
                                                         <TagLabel fontSize={"1.2rem"} fontWeight={"400"}> X:{val?.x}-Y:{val?.y}-</TagLabel>
