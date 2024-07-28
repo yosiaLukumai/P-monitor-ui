@@ -12,7 +12,7 @@ export const AllImages = () => {
     let [imageReady, setImagesReady] = useState(false);
     let [loading, setLoading] = useState(true)
     const [user, changeUser] = useState(retriveData("PData"))
-    const [phase, setNewPhase] = useState(false)
+    const [phase, setNewPhase] = useState("1")
 
     async function fetchImages(url) {
         try {
@@ -31,7 +31,7 @@ export const AllImages = () => {
     }
 
     useEffect(() => {
-        let url = `${MainUrl}data/images/${phase ? "last" : "new"}`;
+        let url = `${MainUrl}data/images/${phase}`;
         fetchImages(url);
     }, [phase])
     return (
@@ -41,8 +41,9 @@ export const AllImages = () => {
                 <Center>
                     <Tabs onChange={(e) => setNewPhase(e)} boxShadow='dark-lg'>
                         <TabList>
-                            <Tab _selected={{ color: 'white', bg: 'blue.500' }}>New</Tab>
-                            <Tab _selected={{ color: 'white', bg: 'green.400' }}>Last</Tab>
+                            <Tab _selected={{ color: 'white', bg: 'blue.500' }}>Phase 1</Tab>
+                            <Tab _selected={{ color: 'white', bg: 'green.400' }}>Phase 2</Tab>
+                            <Tab _selected={{ color: 'white', bg: 'green.400' }}>Phase 3</Tab>
                         </TabList>
                     </Tabs>
                 </Center>

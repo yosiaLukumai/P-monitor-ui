@@ -11,7 +11,7 @@ export const History = () => {
     const { parameter } = useParams()
     const [data, setData] = useState(null)
     const [error, setError] = useState("")
-    let [phase, setPhase] = useState(false)
+    let [phase, setPhase] = useState("1")
     const fetchData = async (url) => {
         try {
             // Set loading to true while fetching data
@@ -36,12 +36,12 @@ export const History = () => {
         }
     };
     useEffect(() => {
-        let url = `${MainUrl}data/specific/${parameter}/${retriveData("PData")._id}/new`
+        let url = `${MainUrl}data/specific/${parameter}/${retriveData("PData")._id}/1`
         fetchData(url);
     }, [])
 
     useEffect(() => {
-        let url = `${MainUrl}data/specific/${parameter}/${retriveData("PData")._id}/${phase ? 'last' : 'new'}`
+        let url = `${MainUrl}data/specific/${parameter}/${retriveData("PData")._id}/${phase}`
         fetchData(url)
     }, [phase])
 
@@ -57,8 +57,9 @@ export const History = () => {
                         <Center>
                             <Tabs onChange={(e) => setPhase(e)} boxShadow='dark-lg'>
                                 <TabList>
-                                    <Tab _selected={{ color: 'white', bg: 'blue.500' }}>New</Tab>
-                                    <Tab _selected={{ color: 'white', bg: 'green.400' }}>Last</Tab>
+                                    <Tab _selected={{ color: 'white', bg: 'blue.500' }}>Phase 3</Tab>
+                                    <Tab _selected={{ color: 'white', bg: 'green.400' }}>Phase 2</Tab>
+                                    <Tab _selected={{ color: 'white', bg: 'green.400' }}>Phase 1</Tab>
                                 </TabList>
                             </Tabs>
                         </Center>
