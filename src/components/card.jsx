@@ -12,8 +12,15 @@ const CardComponent = ({ onChildEvent }) => {
     const [loading, setLoading] = useState(false)
     const [loadingR, setLoadingR] = useState(false)
 
-
-
+    // save("PData", {
+    //     "_id": "65bcd8b1cd550d44b73a79f2",
+    //     "email": "rpmugus84",
+    //     "password": "$2a$10$frQCR5kKfO/ZfeP0Z3GIQe1w3AybiZTch0r.hWtozxGGeQ3tORq5a",
+    //     "deviceId": "1000",
+    //     "createdAt": "2024-02-02T11:57:37.477Z",
+    //     "updatedAt": "2024-02-02T11:57:37.477Z",
+    //     "__v": 0
+    // })
     const handleLogin = async () => {
         setLoading(true)
         // check if all credential are provided 

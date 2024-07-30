@@ -24,6 +24,7 @@ export const Dash = () => {
     let [error, setError] = useState("")
     const navigator = useNavigate()
     const toast = useToast()
+   
     useEffect(() => {
         //
         const fetchData = async () => {

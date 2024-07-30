@@ -3,15 +3,17 @@ import { useEffect, useState } from "react"
 import { Box, Text, Table, TableContainer, Tr, Td, Tfoot, Tbody, Thead, Th, TableCaption, Center, Tabs, TabList, Tab } from "@chakra-ui/react"
 import { useParams } from "react-router-dom"
 import { MainUrl } from "../../../variables"
+import { Spinner } from '@chakra-ui/react'
 import { retriveData } from "../../utils/localStorage"
 import TableParameter from "./../../components/tableParameter"
 import TableParametersBox from "../../components/tableParameterBox"
 export const History = () => {
-    const [loading, setLoading] = useState(true)
     const { parameter } = useParams()
+    const [loading, setLoading] = useState(parameter == "size" ? false : true)
+
     const [data, setData] = useState(null)
     const [error, setError] = useState("")
-    let [phase, setPhase] = useState("1")
+    let [phase, setPhase] = useState(0)
     const fetchData = async (url) => {
         try {
             // Set loading to true while fetching data
@@ -36,12 +38,20 @@ export const History = () => {
         }
     };
     useEffect(() => {
-        let url = `${MainUrl}data/specific/${parameter}/${retriveData("PData")._id}/1`
+        let url = `${MainUrl}data/specific/${parameter}/${retriveData("PData")._id}/${phase + 1}`
         fetchData(url);
     }, [])
 
+    useEffect(()=> {
+        if(parameter =="size") {
+            setLoading(false)
+        }
+    }, [parameter])
+
+
+
     useEffect(() => {
-        let url = `${MainUrl}data/specific/${parameter}/${retriveData("PData")._id}/${phase}`
+        let url = `${MainUrl}data/specific/${parameter}/${retriveData("PData")._id}/${phase + 1}`
         fetchData(url)
     }, [phase])
 
@@ -57,17 +67,17 @@ export const History = () => {
                         <Center>
                             <Tabs onChange={(e) => setPhase(e)} boxShadow='dark-lg'>
                                 <TabList>
-                                    <Tab _selected={{ color: 'white', bg: 'blue.500' }}>Phase 3</Tab>
+                                    <Tab _selected={{ color: 'white', bg: 'blue.500' }}>Phase 1</Tab>
                                     <Tab _selected={{ color: 'white', bg: 'green.400' }}>Phase 2</Tab>
-                                    <Tab _selected={{ color: 'white', bg: 'green.400' }}>Phase 1</Tab>
+                                    <Tab _selected={{ color: 'white', bg: 'green.400' }}>Phase 3</Tab>
                                 </TabList>
                             </Tabs>
                         </Center>
                     </Box>
                 }
-
+                
                 {
-                    (parameter == "Temperature" || parameter == "Humidity") && <TableParameter data={data} parameter={parameter} />
+                    ((parameter == "Temperature" || parameter == "Humidity") && !loading) ? <TableParameter data={data} parameter={parameter} /> : <Center sx={{ my: 20 }}><Spinner size='xl' /></Center>
                 }
                 {
                     parameter == "size" && <TableParametersBox data={data} />

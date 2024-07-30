@@ -4,6 +4,7 @@ import { retriveData } from "../../utils/localStorage"
 import { Card, CardBody, Heading, Text, Image, Icon, Stack, useMediaQuery, Center, Tabs, Tab, TabList } from "@chakra-ui/react";
 import { Box, SimpleGrid } from "@chakra-ui/react"
 import { MainUrl } from "../../../variables"
+import { Spinner } from '@chakra-ui/react'
 export const AllImages = () => {
     let screenSize = useMediaQuery()
     let [imagesArray, setImagesArray] = useState(null);
@@ -12,26 +13,28 @@ export const AllImages = () => {
     let [imageReady, setImagesReady] = useState(false);
     let [loading, setLoading] = useState(true)
     const [user, changeUser] = useState(retriveData("PData"))
-    const [phase, setNewPhase] = useState("1")
+    const [phase, setNewPhase] = useState(0)
 
     async function fetchImages(url) {
         try {
+            setLoading(true)
             const response = await fetch(url);
             const result = await response.json();
             if (result.success) {
                 setImagesArray(result.body.images)
                 setImagesReady(true)
+                setLoading(false)
             } else {
                 setImagesReady(false);
             }
         } catch (error) {
-
+            setLoading(true)
         }
 
     }
 
     useEffect(() => {
-        let url = `${MainUrl}data/images/${phase}`;
+        let url = `${MainUrl}data/images/${phase+1}`;
         fetchImages(url);
     }, [phase])
     return (
@@ -53,7 +56,8 @@ export const AllImages = () => {
                 imageReady &&
                 <Box mx="auto" py="2rem" width={{ base: '100%', sm: '80%', md: '70%' }} px={screenSize.width < 600 ? '2' : '0'}>
                     <Text color="#023047" py="1.1rem" textDecoration="underline" fontWeight="bold" fontSize="1.5rem" >Captured Pictures.</Text>
-                    <Box>
+                    { 
+                        !loading ?  <Box>
                         <SimpleGrid
                             backgroundColor=""
                             columns={{ sm: 2, md: 3 }}
@@ -84,7 +88,9 @@ export const AllImages = () => {
                             ))}
                         </SimpleGrid>
 
-                    </Box>
+                    </Box> :  <Center sx={{my:20}}><Spinner size='xl' /></Center>
+                    }
+                   
 
                 </Box>
             }
