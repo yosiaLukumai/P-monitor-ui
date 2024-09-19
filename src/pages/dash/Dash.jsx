@@ -23,6 +23,7 @@ export const Dash = () => {
     let [loading, setLoading] = useState(true)
     let [error, setError] = useState("")
     const navigator = useNavigate()
+    const [allDta, setAllDatas] = useState(null)
     const toast = useToast()
    
     useEffect(() => {
@@ -58,11 +59,15 @@ export const Dash = () => {
                 // Set loading to true while fetching data
                 setLoading(true);
                 // Fetch data from an API (replace with your API endpoint)
+                
                 const response = await fetch(`${MainUrl}data/graphdata/${retriveData("PData")?.deviceId}`);
                 const result = await response.json();
                 // console.log(result);
                 if (result.success) {
-                    let results = result?.body?.reverse();
+                    let results = result?.body?.fiveLastData?.reverse();
+                    
+                    setAllDatas( result?.body.size)
+                    
                     let dataArray = [["Time", "Temp", "Hum"]]
                     results.map(element => {
                         dataArray.push([element?.createdAt.slice(11, 16), element?.temp, element?.hum])
@@ -135,7 +140,6 @@ export const Dash = () => {
                 // Fetch data from an API (replace with your API endpoint)
                 const response = await fetch(`${MainUrl}data/graphdata/sizes/${retriveData("PData")?.deviceId}`);
                 const result = await response.json();
-                console.log(result);
                 if (result.success) {
                     let results = result?.body;
                     let dataArray = [["Time", "Avg Size"]]
@@ -199,7 +203,7 @@ export const Dash = () => {
                                     </Box>
                                     <Box pl="0.7rem">
                                         <Text color="pink.900" fontSize={((screenSize.width > 539 && screenSize.width < 700) || (screenSize.width > 750 && screenSize.width < 1110)) ? '1.2rem' : '1.5rem'} fontWeight="bold">Size</Text>
-                                        <Text color="#fb8500" fontSize="1.3rem" fontWeight="bold">{data?.size}</Text>
+                                        <Text color="#fb8500" fontSize="1.3rem" fontWeight="bold">{allDta?.average}</Text>
                                     </Box>
                                 </Box>
                             </SimpleGrid>
